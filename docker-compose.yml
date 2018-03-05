@@ -1,0 +1,12 @@
+version: "2.2"
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    ports:
+      - ${JENKINS_HTTP_PORT}:${JENKINS_HTTP_PORT}
+      - ${JENKINS_SLAVE_AGENT_PORT}:${JENKINS_SLAVE_AGENT_PORT}
+    volumes:
+      - ${PWD}/jenkins:/var/jenkins_home
+    network_mode: bridge
+    environment:
+      JENKINS_SLAVE_AGENT_PORT:
