@@ -1,12 +1,47 @@
 version: "2.2"
 services:
   jenkins:
-    image: jenkins/jenkins:lts
+    build:
+      context: .
+      args:
+        http_proxy:
+        https_proxy:
+        no_proxy:
+    image: jenkins:lts
     ports:
       - ${JENKINS_HTTP_PORT}:${JENKINS_HTTP_PORT}
       - ${JENKINS_SLAVE_AGENT_PORT}:${JENKINS_SLAVE_AGENT_PORT}
     volumes:
       - ${PWD}/jenkins:/var/jenkins_home
+      - ${PWD}/groovy/basic_common.groovy:/var/jenkins_home/init.groovy.d/basic_common.groovy
+      - ${PWD}/groovy/basic_user.groovy:/var/jenkins_home/init.groovy.d/basic_user.groovy
+      - ${PWD}/groovy/basic_credential.groovy:/var/jenkins_home/init.groovy.d/basic_credential.groovy
+      - ${PWD}/groovy/configure_github_plugin.groovy:/var/jenkins_home/init.groovy.d/configure_github_plugin.groovy
+      - ${PWD}/groovy/configure_github_branch_source_plugin.groovy:/var/jenkins_home/init.groovy.d/configure_github_branch_source_plugin.groovy
+      #- ${PWD}/groovy/configure_github_oauth.groovy:/var/jenkins_home/init.groovy.d/configure_github_oauth.groovy
+      - ${PWD}/groovy/yet_another_docker.groovy:/var/jenkins_home/init.groovy.d/yet_another_docker.groovy
+      - ${PWD}/.ssh:/var/jenkins_home/.ssh
     network_mode: bridge
+    dns:
+      - ${MY_DNS}
+    restart: always
     environment:
+      JAVA_OPTS:
       JENKINS_SLAVE_AGENT_PORT:
+      JENKINS_URL:
+      JENKINS_ADMIN_USER:
+      JENKINS_ADMIN_PASSWORD:
+      GITHUB_URI:
+      GITHUB_API_URI:
+      GITHUB_OAUTH_CLIENT_ID:
+      GITHUB_OAUTH_CLIENT_SECRET:
+      GITHUB_OAUTH_ORGANIZATION:
+      GITHUB_SSH_USERNAME:
+      GITHUB_PERSONAL_ACCESS_TOKEN:
+      GITHUB_WEBHOOK_SHARED_SECRET:
+      DOCKER_REGISTRY_AUTH_USERNAME:
+      DOCKER_REGISTRY_AUTH_PASSWORD:
+      MY_DNS:
+      http_proxy:
+      https_proxy:
+      no_proxy:
